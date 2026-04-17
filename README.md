@@ -19,7 +19,8 @@ A Python application that allows Twitch chat users to remotely control OBS (Open
 - Start the TwitchOBSController.exe to auto generate the `config.json` file
 - Go to File > Open Config to edit the `config.json` file with your Twitch channel, allowed users, and OBS connection details. After saving changes, use File > Reload Config to apply without restarting the application.
 
-Note: Because this is an unsigned standalone executable, Windows SmartScreen may show a warning. This is common for open-source tools. You can bypass this by clicking "More Info" > "Run Anyway". Alternatively, you can run the source code directly as explained in the [Setup for development](#setup-for-development) section or build your own executable as explained in the [BUILD.md](BUILD.md) file.
+> [!NOTE]  
+> Because this is an unsigned standalone executable, Windows SmartScreen may show a warning. This is common for open-source tools. You can bypass this by clicking "More Info" > "Run Anyway". Alternatively, you can run the source code directly as explained in the [Setup for development](#setup-for-development) section or build your own executable as explained in the [BUILD.md](BUILD.md) file.
 
 ## Usage
 
