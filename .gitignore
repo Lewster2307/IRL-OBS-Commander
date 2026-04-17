@@ -1,0 +1,6 @@
+.venv
+
+# PyInstaller outputs
+build/
+dist/
+*.spec

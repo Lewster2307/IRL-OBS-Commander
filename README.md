@@ -9,68 +9,19 @@ A Python application that allows Twitch chat users to remotely control OBS (Open
 - **User Access Control**: Only specified users can execute commands
 - **Connection Monitoring**: Real-time GUI status indicators for both Twitch and OBS connections
 - **Configuration Management**: Easy-to-edit JSON config file
-- **Minimal Console**: Runs with no visible console window via batch file
-
-## Requirements
-
-- Python 3.x
-- Virtual environment (`.venv`)
-- Tkinter (usually included with Python)
-
-### Python Dependencies
-
-```
-obsws-python==1.8.0
-websocket-client==1.9.0
-```
 
 ## Installation & Setup
-
-1. **Clone or download** this repository to your local machine
-
-2. **Create a virtual environment** (if not already present):
-   ```bash
-   python -m venv .venv
-   ```
-
-3. **Install dependencies**:
-   ```bash
-   .\.venv\Scripts\pip.exe install -r .\requirements.txt
-   ```
-
-4. **Set up OBS WebSocket (requires OBS Studio version 28 or newer for built-in WebSocket support or install the [plugin](https://github.com/obsproject/obs-websocket/releases/tag/5.0.0) for older versions)**:
+- Download the latest binary release from the [releases](https://github.com/Lewster2307/TwitchOBSController/releases) page
+- **Set up OBS WebSocket (requires OBS Studio version 28 or newer for built-in WebSocket support or install the [plugin](https://github.com/obsproject/obs-websocket/releases/tag/5.0.0) for older versions)**:
    - Tools > WebSockets Server Settings
    - Enable WebSockets server
    - Configure the server port (usually 4455) and password in OBS
-   - Ensure the host and port match your `config.json` settings
-
-5. **Configure the application**:
-   - Edit `config.json` with your settings:
-     ```json
-        {
-            "TWITCH_CHANNEL": "YOUR_CHANNEL_HERE",
-            "ALLOWED_USERS": [
-                "USER1",
-                "USER2"
-            ],
-            "OBS_HOST": "localhost",
-            "OBS_PORT": 4455,
-            "OBS_PW": "PASSWORD_HERE"
-        }
-     ```
+- Start the TwitchOBSController.exe to auto generate the `config.json` file
+- Go to File > Open Config to edit the `config.json` file with your Twitch channel, allowed users, and OBS connection details. After saving changes, use File > Reload Config to apply without restarting the application.
 
 ## Usage
 
-### GUI Launch
-
-**Run the application**:
-```bash
-python script.py
-```
-
-Or double-click `TwitchOBSController.bat` for a clean launch (no console window).
-
-### GUI Interface
+### Interface
 
 - **Connection Status**: Shows real-time connection status for OBS and Twitch
 - **Allowed Users**: Displays which users can control the stream
@@ -121,9 +72,68 @@ Bot: [Stream starts in OBS]
 - Store `OBS_PW` securely - it provides direct control over OBS
 - Only add trusted users to `ALLOWED_USERS`
 - Do not share `config.json` publicly (contains sensitive credentials)
-- Consider using environment variables for production deployments
 
-## File Structure
+
+
+
+<br><br>
+<details>
+<summary><strong>Click for the setup for development</strong></summary>
+
+## Setup for development
+
+### Requirements
+
+- Python 3.x
+- Virtual environment (`.venv`)
+- Tkinter (usually included with Python)
+
+### Python Dependencies
+
+```
+obsws-python==1.8.0
+websocket-client==1.9.0
+```
+
+### Installation & Setup
+
+1. **Clone or download** this repository to your local machine
+
+2. **Create a virtual environment** (if not already present):
+   ```bash
+   python -m venv .venv
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   .\.venv\Scripts\pip.exe install -r .\requirements.txt
+   ```
+
+4. **Set up OBS WebSocket (requires OBS Studio version 28 or newer for built-in WebSocket support or install the [plugin](https://github.com/obsproject/obs-websocket/releases/tag/5.0.0) for older versions)**:
+   - Tools > WebSockets Server Settings
+   - Enable WebSockets server
+   - Configure the server port (usually 4455) and password in OBS
+   - Ensure the host and port match your `config.json` settings
+
+5. **Configure the application**:
+   - Edit `config.json` with your settings:
+     ```json
+        {
+            "TWITCH_CHANNEL": "YOUR_CHANNEL_HERE",
+            "ALLOWED_USERS": [
+                "USER1",
+                "USER2"
+            ],
+            "OBS_HOST": "localhost",
+            "OBS_PORT": 4455,
+            "OBS_PW": "PASSWORD_HERE"
+        }
+     ```
+
+### Building the Executable
+Instructions for building a standalone executable using PyInstaller can be found in the [BUILD.md](BUILD.md) file.
+
+### File Structure
 
 ```
 TwitchOBSController/
@@ -133,5 +143,8 @@ TwitchOBSController/
 ├── TwitchOBSController.bat      # Windows launcher (no console)
 ├── .venv/                       # Virtual environment (local)
 ├── .gitignore                   # Git ignore file
+└── BUILD.md                     # Build instructions
 └── README.md                    # This file
 ```
+
+</details>
