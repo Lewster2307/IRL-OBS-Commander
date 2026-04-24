@@ -7,11 +7,13 @@ import zlib
 import base64
 import time
 import webbrowser
+import requests
 import customtkinter as ctk
 import obsws_python as obs
+from packaging import version
 from typing import Dict, Any
 
-VERSION = "2.1.2"
+VERSION = "2.1.3"
 CONFIG_FILE = "settings.dat"
 
 # ==========================================
@@ -224,7 +226,7 @@ class TwitchOBSApp:
         # Nav Bar
         self.nav_bar = ctk.CTkFrame(self.main, height=40, fg_color="transparent")
         self.nav_bar.pack(fill="x", pady=(0, 10))
-        self.file_menu = ctk.CTkOptionMenu(self.nav_bar, values=["Settings", "Exit"], command=self.handle_menu, width=110, dynamic_resizing=False)
+        self.file_menu = ctk.CTkOptionMenu(self.nav_bar, values=["Settings", "Check for updates", "Exit"], command=self.handle_menu, width=110, dynamic_resizing=False)
         self.file_menu.set("Menu")
         self.file_menu.pack(side="left")
 
@@ -271,10 +273,10 @@ class TwitchOBSApp:
         colors = {"green": "#2ecc71", "red": "#e74c3c", "orange": "#f39c12", "gray": "#95a5a6"}
         label.configure(text=text, text_color=colors.get(color, color))
 
-    def show_alert(self, text, color="#e74c3c"):
+    def show_alert(self, text, color="#e74c3c", duration_in_ms=5000):
         if self.alert_timer_id: self.root.after_cancel(self.alert_timer_id)
         self.alert_label.configure(text=text, text_color=color)
-        self.alert_timer_id = self.root.after(5000, lambda: self.alert_label.configure(text=""))
+        self.alert_timer_id = self.root.after(duration_in_ms, lambda: self.alert_label.configure(text=""))
 
     # --- Main System Loop ---
     def toggle_system(self):
@@ -333,6 +335,8 @@ class TwitchOBSApp:
                 self.show_alert("Stop the commander before changing settings.")
             else:
                 self.open_settings()
+        elif choice == "Check for updates":
+            self.check_for_updates()
         elif choice == "Exit":
             self.on_closing()
         self.file_menu.set("Menu")
@@ -384,6 +388,24 @@ class TwitchOBSApp:
         version_info.bind("<Button-1>", lambda e: webbrowser.open("https://github.com/Lewster2307/IRL-OBS-Commander"))
 
         ctk.CTkButton(win, text="Save", command=save).pack(pady=10)
+
+    def check_for_updates(self):
+        try:
+            url = "https://api.github.com/repos/Lewster2307/IRL-OBS-Commander/releases/latest"
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                latest_tag = response.json().get("tag_name", "").replace("v", "")
+                current_tag = VERSION.replace("v", "")
+                
+                if version.parse(latest_tag) > version.parse(current_tag):
+                    self.show_alert(f"Update available: v{latest_tag} (Current: v{current_tag})", "#f39c12", duration_in_ms=15000)
+                    webbrowser.open("https://github.com/Lewster2307/IRL-OBS-Commander/releases/latest")
+                else:
+                    self.show_alert(f"You are running the latest version (v{VERSION}).", "#2ecc71")
+            else:
+                self.show_alert("Failed to check for updates.", "#e74c3c")
+        except Exception as e:
+            self.show_alert(f"Update check failed: {e}", "#e74c3c")
 
     def on_closing(self):
         self.config["window_x"], self.config["window_y"] = self.root.winfo_x(), self.root.winfo_y()
