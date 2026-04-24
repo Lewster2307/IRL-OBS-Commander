@@ -132,12 +132,24 @@ class TwitchBot:
                 self.is_connected = True
                 reconnect_delay = 1  
                 
+                self.buffer = ""
                 while self.running:
                     try:
-                        data = self.sock.recv(2048).decode('utf-8', errors='ignore')
-                        if not data: break # Connection closed
-                        if "PING" in data: self.sock.send("PONG\r\n".encode('utf-8'))
-                        self._process_message(data)
+                        new_data = self.sock.recv(2048).decode('utf-8', errors='ignore')
+                        if not new_data: break # Connection closed
+
+                        self.buffer += new_data
+                        while "\r\n" in self.buffer:
+                            line, self.buffer = self.buffer.split("\r\n", 1)
+                            line = line.strip()
+
+                            if not line: continue
+
+                            if line.startswith("PING"):
+                                self.sock.send(f"PONG {line.split()[1]}\r\n".encode('utf-8'))
+                                continue
+
+                            self._process_message(line)
                     except socket.timeout:
                         continue
                     except Exception:
