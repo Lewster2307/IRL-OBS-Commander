@@ -63,11 +63,6 @@ User: !scene IRL -> OBS switches to the "IRL" scene
 - Verify `Twitch Channel` is correctly configured
 - The tool will auto-reconnect every 3 seconds
 
-### Config Not Accepting Changes
-
-- Stop the tool before reloading config (use "Reload Config" from menu)
-- Verify placeholder values are replaced with actual settings
-
 ### Commands Not Working
 
 - Ensure the command-issuing user is in `Allowed Users`
@@ -77,7 +72,7 @@ User: !scene IRL -> OBS switches to the "IRL" scene
 ## Security Notes
 
 ⚠️ **Important**:
-- Store `OBS_PW` securely - it provides direct control over OBS
+- Store `OBS Password` securely - it provides direct control over OBS
 - Only add trusted users to `Allowed Users` to prevent unauthorized access
 
 
