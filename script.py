@@ -85,6 +85,14 @@ class OBSManager:
         except Exception:
             self.disconnect()
             return False
+    
+    def get_scene_list(self):
+        if not self.is_connected or not self.client: 
+            return None
+        try:
+            return self.client.get_scene_list()
+        except Exception as e:
+            return None
 
     def execute_command(self, cmd: str, args: str = ""):
         if not self.is_connected or not self.client: return
@@ -179,10 +187,11 @@ class TwitchBot:
             elif cmd.startswith("!stop"):
                 self.obs_manager.execute_command("stop")
             elif cmd.startswith("!scene "):
+                scene_list = self.obs_manager.get_scene_list()
                 raw_name = msg[7:].strip()
                 scene_name = "".join(char for char in raw_name if char.isprintable()).strip()  # Remove non-printable characters
                 scene_name = scene_name.encode("ascii", "ignore").decode("ascii").strip()  # Remove non-ASCII characters (important because spamprotector can inject weird unicode chars)
-                if scene_name:
+                if scene_name and scene_name in [s['sceneName'] for s in scene_list.scenes]:
                     self.obs_manager.execute_command("scene", scene_name)
 
 
