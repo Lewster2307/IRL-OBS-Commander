@@ -22,7 +22,7 @@ This tool was specifically designed with **IRL (In Real Life)** streamers in min
 - **Remote Scene Switching:** If your mobile signal drops or you want to switch from your "Camera" scene to a "BRB" screen, you can't simply walk over to your PC. With this tool, you or your moderators can switch scenes directly from Twitch chat.
 - **Emergency Stops:** If something happens on camera that needs to be cut immediately, a quick `!stop` command in chat provides an instant safety net.
 - **No Remote Desktop Needed:** Avoid the lag and hassle of trying to use TeamViewer or AnyDesk on a small phone screen while live.
-- **Setup in Minutes:** No complex Twitch OAuth or bot accounts required. Enable OBS WebSocker, run the app, enter to your Twitch channel, and you're ready to go.
+- **Setup in Minutes:** No complex Twitch OAuth or bot accounts required. Enable OBS WebSocker, run the app, enter your Twitch channel, and you're ready to go.
 
 ## Features
 
