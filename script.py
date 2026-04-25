@@ -13,7 +13,7 @@ import obsws_python as obs
 from packaging import version
 from typing import Dict, Any
 
-VERSION = "2.1.4"
+VERSION = "2.1.5"
 CONFIG_FILE = "settings.dat"
 
 # ==========================================
@@ -142,14 +142,17 @@ class TwitchBot:
                 self.sock.send(f"PASS anonymous\r\nNICK justinfan123\r\nJOIN {chan}\r\n".encode('utf-8'))
                 
                 self.is_connected = True
-                reconnect_delay = 1  
+                reconnect_delay = 1
+                self.last_activity = time.time()
                 
                 self.buffer = ""
                 while self.running:
                     try:
                         new_data = self.sock.recv(2048).decode('utf-8', errors='ignore')
+                        print(new_data) # Debug: Print raw IRC data
                         if not new_data: break # Connection closed
 
+                        self.last_activity = time.time()
                         self.buffer += new_data
                         while "\r\n" in self.buffer:
                             line, self.buffer = self.buffer.split("\r\n", 1)
@@ -163,6 +166,12 @@ class TwitchBot:
 
                             self._process_message(line)
                     except socket.timeout:
+                        if time.time() - self.last_activity > 30:
+                            try:
+                                    self.sock.send("PING :keepalive\r\n".encode('utf-8'))
+                            except Exception:
+                                self.is_connected = False
+                                break # Socket error, break to reconnect
                         continue
                     except Exception:
                         break # Socket error, break to reconnect
@@ -326,7 +335,7 @@ class TwitchOBSApp:
             chan = self.config.get('TWITCH_CHANNEL', '').lstrip('#')
             self.update_label(self.twitch_label, f"Twitch: #{chan} ✅", "green")
         else:
-            self.update_label(self.twitch_label, "Twitch: Connection Lost ❌", "red")
+            self.update_label(self.twitch_label, "Twitch: Reconnecting...", "orange")
 
         # Update OBS UI & Handle Reconnection
         if self.obs.is_connected and self.obs.client:
