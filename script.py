@@ -227,6 +227,7 @@ class TwitchOBSApp:
         
         self.alert_timer_id = None
         self.obs_reconnect_thread = None
+        self.last_obs_reconnect_time = 0
 
     def setup_window(self):
         width, height = 460, 500
@@ -345,8 +346,12 @@ class TwitchOBSApp:
             
             # Spin up a background thread to reconnect to OBS so the UI doesn't freeze
             if not self.obs_reconnect_thread or not self.obs_reconnect_thread.is_alive():
-                self.obs_reconnect_thread = threading.Thread(target=self.obs.connect, daemon=True)
-                self.obs_reconnect_thread.start()
+                current_time = time.time()
+                # Cooldown to prevent port exhaustion and console spam
+                if current_time - self.last_obs_reconnect_time > 10:
+                    self.last_obs_reconnect_time = current_time
+                    self.obs_reconnect_thread = threading.Thread(target=self.obs.connect, daemon=True)
+                    self.obs_reconnect_thread.start()
 
         self.root.after(3000, self.monitor_loop)
 
