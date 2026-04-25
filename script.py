@@ -361,6 +361,7 @@ class TwitchOBSApp:
             self.check_for_updates()
         elif choice == "Exit":
             self.on_closing()
+            return
         self.file_menu.set("Menu")
 
     def open_settings(self):
